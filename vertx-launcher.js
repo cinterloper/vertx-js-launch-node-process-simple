@@ -16,8 +16,8 @@ var opts = {
 };
 router.route('/eventbus/*').handler(SockJSHandler.create(vertx).bridge(opts).handle);
 
-eb.consumer('registration', function (e, mes) {
-  console.log("process id launched: " + mes)
+eb.consumer('registration', function (mes) {
+  console.log("process registered: " + mes.body())
 })
 
 vertx.createHttpServer().requestHandler(router.accept).listen(
@@ -27,7 +27,7 @@ vertx.createHttpServer().requestHandler(router.accept).listen(
             if (res_err)
               console.log('\n##### deploying http server failed #####\n' + res_err);
             else
-              $EXEC('./node_script.sh')
+              $EXEC('./node_script.sh > /tmp/vertx_launch.log')
             console.log("node process PID is :" + $OUT)
         }
 );
